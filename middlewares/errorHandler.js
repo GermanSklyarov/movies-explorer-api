@@ -1,14 +1,11 @@
-const { checkError } = require('../utils/functions');
-
 module.exports = (err, req, res, next) => {
-  const { statusCode = checkError(err), message } = err;
+  const statusCode = err.statusCode || 500;
+  const message = statusCode === 500
+    ? 'На сервере произошла ошибка'
+    : err.message;
 
   res
     .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
+    .send({ message });
   next();
 };
